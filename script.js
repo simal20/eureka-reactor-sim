@@ -13,6 +13,16 @@ const simHeight = 600;
 canvas.width = simWidth;
 canvas.height = simHeight;
 
+// --- PHYSICS TUNING CONSTANTS ---
+const THERMAL_INERTIA = 0.04;           // Lower = slower core temperature transitions
+const BASE_HEATING_RATE = 0.85;         // Overall core heat gain multiplier
+const FEEDWATER_DELAY_FACTOR = 0.05;    // Delayed cooling speed (simulating water mass/loop delay)
+const TURBINE_INERTIA = 0.02;           // Mechanical inertia coefficient (lower = slower spool-up)
+const GRID_LOAD_DRAG = 0.04;            // Drop factor when generator grid connected (4% RPM drop)
+const GRID_SYNC_DECAY = 0.08;           // Speed of RPM crash if steam pressure is too low under grid sync
+const GRID_MIN_PRESSURE = 15.0;         // Minimum steam pressure (Bar) required to maintain grid sync
+
+
 // Audio Variables
 let audioCtx = null;
 let audioEnabled = true;
@@ -98,6 +108,7 @@ let generatorSynced = false; // ON/OFF
 const ambientTemp = 20.0;  // °C
 const maxTemp = 1000.0;    // °C
 let temperature = ambientTemp; // °C
+let activeCooling = 0.0;   // Delayed cooling state tracker (simulates water loop mass)
 let steamPressure = 0.0;   // Bar
 let turbineRPM = 0.0;      // RPM
 let mwOutput = 0.0;        // Megawatts
@@ -351,6 +362,7 @@ function init() {
     particles = [];
     isScrammed = false;
     temperature = 20.0;
+    activeCooling = 0.0;
     steamPressure = 0.0;
     turbineRPM = 0.0;
     mwOutput = 0.0;

@@ -20,7 +20,7 @@
     --danger-red-glow: rgba(239, 68, 68, 0.6);
     
     --font-display: 'Orbitron', sans-serif;
-    --font-sans: 'Outfit', sans-serif;
+    --font-sans: 'Manjari', sans-serif;
     --font-mono: 'Share Tech Mono', monospace;
     
     --glow-shadow: 0 0 15px var(--neon-blue-glow);
@@ -837,4 +837,50 @@ input:checked + .slider-round:before {
     background: #a5f3fc !important;
     box-shadow: 0 0 10px rgba(165, 243, 252, 0.6) !important;
 }
+
+/* Eureka Insights Brand Header */
+.logo-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+}
+
+.logo-img {
+    max-height: 48px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.25));
+}
+
+.logo-text {
+    font-family: 'CMU Serif', 'Georgia', 'Times New Roman', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--neon-blue) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Desktop Absolute Placement */
+@media (min-width: 1280px) {
+    .logo-header {
+        position: absolute;
+        top: 24px;
+        left: 24px;
+    }
+}
+
+/* Mobile/Tablet Inline Placement */
+@media (max-width: 1279px) {
+    .logo-header {
+        justify-content: center;
+        margin-bottom: 8px;
+        margin-top: 10px;
+    }
+}
+
 
