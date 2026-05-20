@@ -603,8 +603,13 @@ function update() {
     // Natural convection ambient loss
     const ambientLoss = (temperature - ambientTemp) * 0.0004;
 
-    temperature += heatAdded - pumpCoolingRate - ambientLoss;
+    // Apply thermal inertia (damped response)
+    const netHeat = (heatAdded - pumpCoolingRate - ambientLoss) * THERMAL_INERTIA;
+    temperature += netHeat;
     temperature = Math.max(ambientTemp, Math.min(maxTemp, temperature));
+    
+    // Track delayed cooling effect for water loop mass simulation
+    activeCooling = activeCooling * (1 - FEEDWATER_DELAY_FACTOR) + pumpCoolingRate * FEEDWATER_DELAY_FACTOR;
 
     // (b) Steam Pressure (in Bar)
     // Core heat boils coolant into high-pressure steam (starts > 100°C)
@@ -622,8 +627,8 @@ function update() {
     let targetRPM = 0.0;
     if (generatorSynced) {
         if (steamPressure > 5.0) {
-            // Lock onto grid sync frequency (3000 RPM)
-            targetRPM = 3000;
+            // Lock onto grid sync frequency (3000 RPM) with load drag
+            targetRPM = 3000 * (1 - GRID_LOAD_DRAG);
         } else {
             // Drop out of sync
             targetRPM = steamPressure * 30;
@@ -632,8 +637,14 @@ function update() {
         // Freewheeling (runaway) RPM
         targetRPM = steamPressure * 33.5; // Max 153 * 33.5 = 5125 RPM
     }
+
+    // Apply mechanical inertia
+    turbineRPM += (targetRPM - turbineRPM) * TURBINE_INERTIA;
     
-    turbineRPM += (targetRPM - turbineRPM) * 0.02;
+    // If grid synced but pressure too low, rapidly decay RPM
+    if (generatorSynced && steamPressure < GRID_MIN_PRESSURE) {
+        turbineRPM += (0 - turbineRPM) * GRID_SYNC_DECAY;
+    }
 
     // (d) Electricity Output (MW)
     if (generatorSynced && turbineRPM > 2000) {
