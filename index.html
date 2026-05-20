@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eureka Insights: Nuclear Reactor Simulator</title>
+    <title>Eureka Insights: Nuclear Power Plant Simulator</title>
     <!-- Google Fonts for Sci-Fi / Technical UI -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,9 +14,9 @@
     <div class="app-container">
         <!-- Header Section -->
         <header class="app-header">
-            <div class="brand-badge">EUREKA INSIGHTS // CORE DYNAMICS LAB</div>
-            <h1>NUCLEAR REACTOR SIMULATOR</h1>
-            <p class="subtitle">Interactive Simulation of Fission Chain Reactions and Control Rod Dynamics</p>
+            <div class="brand-badge">EUREKA INSIGHTS // THERMAL-HYDRAULIC POWER PLANT</div>
+            <h1>NUCLEAR POWER PLANT SIMULATOR</h1>
+            <p class="subtitle">Complete Plant-Scale Simulation: Core Reactivity, Thermal Steam Loops, and Grid Synchronization</p>
         </header>
 
         <!-- Main Layout -->
@@ -26,7 +26,7 @@
             <section class="reactor-section">
                 <div class="reactor-card">
                     <div class="reactor-header">
-                        <div class="core-tag">REACTOR CORE MONITOR</div>
+                        <div class="core-tag">PROCESS FLOW DIAGRAM (PFD) MONITOR</div>
                         <div class="status-led-container">
                             <span class="led" id="status-led"></span>
                             <span class="status-label" id="status-label">STATUS: NORMAL</span>
@@ -35,12 +35,12 @@
                     
                     <!-- Canvas Container (for CSS shaking animation) -->
                     <div id="canvas-container" class="canvas-container">
-                        <canvas id="reactor-canvas" width="600" height="500"></canvas>
+                        <canvas id="reactor-canvas" width="800" height="600"></canvas>
                         <!-- Meltdown Alarm Overlay -->
                         <div id="meltdown-overlay" class="meltdown-overlay hidden">
                             <div class="overlay-content">
                                 <div class="alert-icon">⚠️</div>
-                                <h2>MELTDOWN IMMINENT</h2>
+                                <h2>CORE MELTDOWN IMMINENT</h2>
                                 <p>ACTIVATE EMERGENCY SCRAM IMMEDIATELY</p>
                             </div>
                         </div>
@@ -53,12 +53,12 @@
                 
                 <!-- Digital Instrument Panel -->
                 <div class="panel-card instrument-panel">
-                    <h3>SYSTEM METRICS</h3>
+                    <h3>PLANT METRICS</h3>
                     
-                    <!-- Temperature Gauge -->
+                    <!-- Core Temperature Gauge -->
                     <div class="metric-group">
                         <div class="metric-info">
-                            <span class="metric-name">Core Temp</span>
+                            <span class="metric-name">Core Temperature</span>
                             <span class="metric-value" id="temp-display">20.0 °C</span>
                         </div>
                         <div class="gauge-bar-container">
@@ -66,7 +66,7 @@
                         </div>
                     </div>
 
-                    <!-- Neutron Display -->
+                    <!-- Metrics Grid -->
                     <div class="metrics-row">
                         <div class="metric-card">
                             <span class="mini-label">Active Neutrons</span>
@@ -76,12 +76,24 @@
                             <span class="mini-label">Reactivity State</span>
                             <span class="digital-number" id="reactivity-state">CRITICAL</span>
                         </div>
+                        <div class="metric-card">
+                            <span class="mini-label">Steam Pressure</span>
+                            <span class="digital-number text-cyan" id="pressure-display">0.0 Bar</span>
+                        </div>
+                        <div class="metric-card">
+                            <span class="mini-label">Turbine Speed</span>
+                            <span class="digital-number text-yellow" id="rpm-display">0 RPM</span>
+                        </div>
+                        <div class="metric-card full-width">
+                            <span class="mini-label">Total Grid Output</span>
+                            <span class="digital-number text-green pulse-text" id="mw-display">0.0 MW</span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Simulation Controls -->
                 <div class="panel-card control-panel">
-                    <h3>REACTOR INTERACTION</h3>
+                    <h3>CONTROL CONSOLE</h3>
                     
                     <!-- Control Rod Insertion Slider -->
                     <div class="control-group">
@@ -94,6 +106,49 @@
                             <span>0% (Raised)</span>
                             <span>50%</span>
                             <span>100% (Inserted)</span>
+                        </div>
+                    </div>
+
+                    <!-- Feedwater Pump Speed Slider -->
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="pump-slider" class="control-label">Feedwater Pump Speed</label>
+                            <span class="control-val" id="pump-val">50%</span>
+                        </div>
+                        <input type="range" id="pump-slider" min="0" max="100" value="50" class="neon-slider pump-slider">
+                        <div class="slider-ticks">
+                            <span>0% (Off)</span>
+                            <span>50%</span>
+                            <span>100% (Max)</span>
+                        </div>
+                    </div>
+
+                    <!-- Cooling Tower Fan Slider -->
+                    <div class="control-group">
+                        <div class="control-header">
+                            <label for="fan-slider" class="control-label">Cooling Tower Fan Speed</label>
+                            <span class="control-val" id="fan-val">50%</span>
+                        </div>
+                        <input type="range" id="fan-slider" min="0" max="100" value="50" class="neon-slider fan-slider">
+                        <div class="slider-ticks">
+                            <span>0% (Off)</span>
+                            <span>50%</span>
+                            <span>100% (Max)</span>
+                        </div>
+                    </div>
+
+                    <!-- Generator Grid Sync Toggle -->
+                    <div class="control-group toggle-group">
+                        <div class="control-header">
+                            <label for="sync-toggle" class="control-label">Generator Grid Sync</label>
+                            <span class="control-val" id="sync-val">OFF</span>
+                        </div>
+                        <div class="sync-switch-container">
+                            <label class="switch large-switch">
+                                <input type="checkbox" id="sync-toggle">
+                                <span class="slider-round"></span>
+                            </label>
+                            <span class="sync-led" id="sync-led"></span>
                         </div>
                     </div>
 
@@ -110,41 +165,49 @@
                         </button>
                     </div>
 
-                    <!-- Mute Toggle for Sound Synthesis -->
+                    <!-- Mute Toggle for Audio -->
                     <div class="audio-control">
                         <label class="switch">
                             <input type="checkbox" id="audio-toggle" checked>
                             <span class="slider-round"></span>
                         </label>
-                        <span class="audio-label">Synthesize Audio (Geiger/Alarms)</span>
+                        <span class="audio-label">Synthesize Audio (Geiger/Alarms/Turbine)</span>
                     </div>
                 </div>
 
-                <!-- Educational Logs/Console -->
+                <!-- System Logs / Console -->
                 <div class="panel-card log-panel">
-                    <h3>SYSTEM LOGS</h3>
+                    <h3>PLANT LOGS</h3>
                     <div class="console-box" id="console-logs">
-                        <div class="log-entry system">[SYSTEM] Core online. Baseline coolant circulating.</div>
-                        <div class="log-entry normal">[STATUS] System stable. Neutrons active: 10.</div>
+                        <div class="log-entry system">[SYSTEM] Plant offline. Secondary circuits priming.</div>
+                        <div class="log-entry system">[SYSTEM] Core temperature stable at ambient 20.0 °C.</div>
+                        <div class="log-entry normal">[STATUS] Ready for startup. Inject neutron to initiate chain reaction.</div>
                     </div>
                 </div>
 
-                <!-- Mini Guide/Legend -->
+                <!-- Mini Guide / Legend -->
                 <div class="panel-card legend-panel">
-                    <h3>LEGEND & DYNAMICS</h3>
+                    <h3>LEGEND & FLOW SYSTEM</h3>
                     <div class="legend-grid">
                         <div class="legend-item">
                             <div class="legend-color fuel-color"></div>
                             <div class="legend-text">
-                                <strong>Fuel Rods (Green)</strong>
-                                <span>Fission source. Collision doubles neutrons (+1) & raises core temperature.</span>
+                                <strong>Reactor Core (Left)</strong>
+                                <span>Fission occurs here. Fuel rods heat coolant; control rods absorb neutrons.</span>
                             </div>
                         </div>
                         <div class="legend-item">
-                            <div class="legend-color control-color"></div>
+                            <div class="legend-color turbine-color"></div>
                             <div class="legend-text">
-                                <strong>Control Rods (Silver/Red)</strong>
-                                <span>Neutron poison. Absorb (destroys) neutrons to halt the reaction.</span>
+                                <strong>Turbine & Generator (Top Center)</strong>
+                                <span>Steam pressure drives turbine rotation. Sync with grid to generate megawatts.</span>
+                            </div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color tower-color"></div>
+                            <div class="legend-text">
+                                <strong>Cooling Tower (Right)</strong>
+                                <span>Discharges heat from the condenser. High fan speed increases heat rejection.</span>
                             </div>
                         </div>
                     </div>
@@ -154,7 +217,7 @@
         </main>
         
         <footer class="app-footer">
-            <p>&copy; 2026 Eureka Insights. All rights reserved. Design for education and visualization.</p>
+            <p>&copy; 2026 Eureka Insights. Plant-scale simulator for thermal-hydraulic power plant demonstration.</p>
         </footer>
     </div>
 
